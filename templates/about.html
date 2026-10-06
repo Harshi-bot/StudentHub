@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us | StudentHub Platform{% endblock %}
+
+{% block content %}
+<div class="about-page">
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> EMPOWERING EDUCATION</div>
+        <h1 class="about-hero-title">Intelligent Student Management <br><span class="gradient-text">Engineered for Excellence</span></h1>
+        <p class="about-hero-subtitle">
+            StudentHub is a modern, unified academic platform engineered to streamline student records, simplify administrative workflows, and provide actionable insights into academic performance.
+        </p>
+        <div class="about-hero-actions">
+            <a href="{{ url_for('students') }}" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-users"></i> Explore Directory
+            </a>
+            <a href="#features" class="btn btn-outline btn-lg">
+                <i class="fa-solid fa-compass"></i> Discover Features
+            </a>
+        </div>
+    </section>
+
+    <!-- Key Platform Metrics -->
+    <section class="metrics-banner">
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <div class="metric-icon metric-purple"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="metric-data">
+                    <span class="metric-number">{{ student_count }}+</span>
+                    <span class="metric-label">Enrolled Students in System</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-icon metric-blue"><i class="fa-solid fa-book-open"></i></div>
+                <div class="metric-data">
+                    <span class="metric-number">{{ course_count }}</span>
+                    <span class="metric-label">Active Academic Programs</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-icon metric-emerald"><i class="fa-solid fa-bolt"></i></div>
+                <div class="metric-data">
+                    <span class="metric-number">99.9%</span>
+                    <span class="metric-label">System Availability & Uptime</span>
+                </div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-icon metric-amber"><i class="fa-solid fa-award"></i></div>
+                <div class="metric-data">
+                    <span class="metric-number">4.9/5</span>
+                    <span class="metric-label">Administrator Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="section-container" id="mission-vision">
+        <div class="section-header text-center">
+            <span class="section-tag">OUR PURPOSE</span>
+            <h2 class="section-title">Driven by Educational Innovation</h2>
+            <p class="section-desc">We bridge the gap between administrative complexity and educational clarity through thoughtfully designed software.</p>
+        </div>
+
+        <div class="purpose-grid">
+            <div class="purpose-card">
+                <div class="purpose-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3>Our Mission</h3>
+                <p>
+                    To empower educational institutions, educators, and administrators with intuitive, dependable, and swift digital tools that eliminate redundant paperwork and allow institutions to focus on what matters most: student success and holistic development.
+                </p>
+                <ul class="purpose-list">
+                    <li><i class="fa-solid fa-check"></i> Eliminate administrative bottlenecks</li>
+                    <li><i class="fa-solid fa-check"></i> Real-time visibility into academic trajectory</li>
+                    <li><i class="fa-solid fa-check"></i> Accessible, responsive, and secure infrastructure</li>
+                </ul>
+            </div>
+
+            <div class="purpose-card">
+                <div class="purpose-icon"><i class="fa-solid fa-eye"></i></div>
+                <h3>Our Vision</h3>
+                <p>
+                    To become the global standard for smart campus administration, uniting admissions, academic tracking, student engagement, and alumni insights within a beautifully orchestrated and accessible web platform.
+                </p>
+                <ul class="purpose-list">
+                    <li><i class="fa-solid fa-check"></i> Data-driven academic advising</li>
+                    <li><i class="fa-solid fa-check"></i> Unified multi-department collaboration</li>
+                    <li><i class="fa-solid fa-check"></i> Scalable architecture ready for growth</li>
+                </ul>
+            </div>
+
+            <div class="purpose-card">
+                <div class="purpose-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Our Core Values</h3>
+                <p>
+                    Every line of code and user experience we create is anchored in data privacy, transparency, inclusive accessibility, and relentless technical refinement.
+                </p>
+                <ul class="purpose-list">
+                    <li><i class="fa-solid fa-check"></i> Absolute data privacy and integrity</li>
+                    <li><i class="fa-solid fa-check"></i> Human-first design and zero-friction UX</li>
+                    <li><i class="fa-solid fa-check"></i> Continuous iteration and community feedback</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Platform Features -->
+    <section class="section-container bg-surface" id="features">
+        <div class="section-header text-center">
+            <span class="section-tag">CORE CAPABILITIES</span>
+            <h2 class="section-title">Built for Modern Campus Needs</h2>
+            <p class="section-desc">Engineered from the ground up to solve real day-to-day challenges faced by academic registrars and departments.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-indigo"><i class="fa-solid fa-address-card"></i></div>
+                <h3>Comprehensive Student Records</h3>
+                <p>Maintain detailed biographical records, enrollment histories, guardian emergency contacts, and personalized notes for each student in one single source of truth.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-cyan"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>GPA & Performance Insights</h3>
+                <p>Track cumulative GPAs, monitor semester-by-semester trends, and identify students who may require academic support or merit scholarship recognition.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-emerald"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                <h3>Instant Search & Smart Filters</h3>
+                <p>Instantly search by name, student ID, or email, and slice records by academic department or enrollment status with zero latency thanks to client-side filtering.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-amber"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>Multi-Program Organization</h3>
+                <p>Manage diverse academic programs ranging from BCA and BSc IT to B.Tech, MCA, Data Science, and specialized vocational certificates with tailored attributes.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-rose"><i class="fa-solid fa-lock"></i></div>
+                <h3>Reliable & Safe Architecture</h3>
+                <p>ACID-compliant SQLite relational database engine, input sanitization, and structured transactional integrity prevent record loss and corruption.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-violet"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h3>Fully Responsive Experience</h3>
+                <p>Optimized for desktops, tablets, and smartphones, ensuring staff and faculty can access or update information whether at their desk or on campus grounds.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="section-container" id="tech-stack">
+        <div class="section-header text-center">
+            <span class="section-tag">UNDER THE HOOD</span>
+            <h2 class="section-title">Modern Technology Architecture</h2>
+            <p class="section-desc">Built with lightweight, high-performance web standards for maximum stability and speed.</p>
+        </div>
+
+        <div class="tech-stack-grid">
+            <div class="tech-card">
+                <div class="tech-icon"><i class="fa-brands fa-html5"></i></div>
+                <h4>Frontend Structure</h4>
+                <span class="tech-name">Semantic HTML5</span>
+                <p>Accessible, SEO-optimized semantic markup ensuring screen reader compatibility and clean structural hierarchy.</p>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon"><i class="fa-brands fa-css3-alt"></i></div>
+                <h4>Styling & Aesthetics</h4>
+                <span class="tech-name">Modern Vanilla CSS3</span>
+                <p>Custom CSS design system featuring HSL color palettes, responsive CSS Grid, Flexbox, and micro-interactions.</p>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon"><i class="fa-brands fa-js"></i></div>
+                <h4>Client-side Engine</h4>
+                <span class="tech-name">Modern JavaScript ES6+</span>
+                <p>Dynamic live filtering, instant form validation, interactive live ID previews, and asynchronous DOM manipulation.</p>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon"><i class="fa-brands fa-python"></i></div>
+                <h4>Server & API Backend</h4>
+                <span class="tech-name">Python 3 & Flask</span>
+                <p>Robust micro-framework handling routing, Jinja2 template rendering, RESTful API endpoints, and session management.</p>
+            </div>
+
+            <div class="tech-card">
+                <div class="tech-icon"><i class="fa-solid fa-database"></i></div>
+                <h4>Database Engine</h4>
+                <span class="tech-name">SQLite3 Relational DB</span>
+                <p>Reliable, zero-configuration embedded database engine ensuring fast read/write queries and seamless local persistence.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team / Leadership Section -->
+    <section class="section-container bg-surface" id="team">
+        <div class="section-header text-center">
+            <span class="section-tag">BEHIND THE PLATFORM</span>
+            <h2 class="section-title">The Engineering & Product Team</h2>
+            <p class="section-desc">Passionate developers, designers, and educators crafting top-tier administrative software.</p>
+        </div>
+
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar-wrapper">
+                    <div class="team-avatar bg-avatar-1">HS</div>
+                </div>
+                <h3>Harshita Sharma</h3>
+                <span class="team-role">Lead System Architect & Developer</span>
+                <p>Full-stack developer focused on robust Python backends, database architecture, and scalable campus administrative systems.</p>
+                <div class="team-socials">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="team-avatar-wrapper">
+                    <div class="team-avatar bg-avatar-2">AK</div>
+                </div>
+                <h3>Aarav Kapoor</h3>
+                <span class="team-role">UI/UX & Frontend Engineer</span>
+                <p>Design enthusiast specializing in responsive CSS architectures, micro-interactions, and accessible student portal interfaces.</p>
+                <div class="team-socials">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="team-avatar-wrapper">
+                    <div class="team-avatar bg-avatar-3">RN</div>
+                </div>
+                <h3>Rohan Nambiar</h3>
+                <span class="team-role">Academic Operations Advisor</span>
+                <p>Higher education specialist ensuring workflows adhere to global university accreditation and record compliance standards.</p>
+                <div class="team-socials">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="section-container" id="faqs">
+        <div class="section-header text-center">
+            <span class="section-tag">FREQUENTLY ASKED QUESTIONS</span>
+            <h2 class="section-title">Common Questions & Answers</h2>
+            <p class="section-desc">Everything you need to know about navigating and utilizing StudentHub.</p>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    <span>How does StudentHub handle duplicate student records?</span>
+                    <i class="fa-solid fa-chevron-down faq-arrow"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>StudentHub enforces strict database constraints on both the unique Student ID code (e.g. <code>STU-101</code>) and student email addresses. When adding a new student or editing an existing profile, the Flask backend validates that no duplicate email exists in the database.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    <span>Can I filter students dynamically without refreshing the page?</span>
+                    <i class="fa-solid fa-chevron-down faq-arrow"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! The Student Directory features dual-mode filtering: instant client-side JavaScript filtering as you type in the search bar or select dropdowns, as well as server-side query parameter filtering for bookmarkable search URLs.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    <span>What information can be stored for each student profile?</span>
+                    <i class="fa-solid fa-chevron-down faq-arrow"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Each profile stores comprehensive records including Full Name, Student Code, Email, Phone, Academic Course/Program, Current Semester, Status (Active, Graduated, On Leave), Cumulative GPA, Date of Birth, Full Residential Address, Guardian Name & Phone, and Counselor Remarks.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    <span>Is the platform mobile responsive?</span>
+                    <i class="fa-solid fa-chevron-down faq-arrow"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely. The entire frontend is styled using mobile-first responsive CSS, featuring flexible layouts, swipeable table containers, and a slide-out hamburger navigation menu for smartphones and tablets.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    <span>How do I export or integrate StudentHub with external APIs?</span>
+                    <i class="fa-solid fa-chevron-down faq-arrow"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>StudentHub includes dedicated REST API endpoints (such as <code>/api/students</code> and <code>/api/stats</code>) that return structured JSON data, making it straightforward to connect with external reporting dashboards or export to CSV.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="cta-banner">
+        <div class="cta-content">
+            <h2>Ready to Elevate Student Management?</h2>
+            <p>Access live academic records, register students, and experience frictionless administrative workflows today.</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('students') }}" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-users"></i> View Students Directory
+                </a>
+                <a href="{{ url_for('add_student') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fa-solid fa-user-plus"></i> Add New Student
+                </a>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

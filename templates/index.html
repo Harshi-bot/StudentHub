@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | StudentHub Academic Portal{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+
+    <!-- Hero Section -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <div class="hero-tag">
+                <span class="live-dot"></span> ACADEMIC COMMAND CENTER &bull; SPRING 2026
+            </div>
+            <h1 class="hero-title">Effortlessly Manage, Track &amp; Support Every Student.</h1>
+            <p class="hero-desc">
+                Welcome to <strong>StudentHub</strong>. A unified, modern academic records system providing real-time visibility across enrollments, academic performance, program distributions, and student dossiers.
+            </p>
+            <div class="hero-actions">
+                <a href="{{ url_for('students') }}" class="btn btn-primary" id="btnExploreStudents">
+                    <i class="fa-solid fa-users"></i> Student Directory
+                </a>
+                <a href="{{ url_for('add_student') }}" class="btn btn-secondary" id="btnAddStudentHero">
+                    <i class="fa-solid fa-user-plus"></i> Register Student
+                </a>
+                <a href="{{ url_for('about') }}" class="btn btn-ghost" id="btnAboutHero">
+                    <i class="fa-solid fa-circle-info"></i> About Platform
+                </a>
+            </div>
+        </div>
+        <div class="hero-badge-card">
+            <div class="badge-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="badge-card-info">
+                <span class="badge-card-title">Database Status</span>
+                <span class="badge-card-status"><i class="fa-solid fa-circle-check"></i> Connected &amp; Synced</span>
+                <span class="badge-card-meta">SQLite Engine v3 &bull; Encrypted Records</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stat Cards Grid -->
+    <section class="stats-grid">
+        <div class="stat-card stat-purple">
+            <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Students</span>
+                <h2 class="stat-number" id="statTotalStudents">{{ total_students }}</h2>
+                <div class="stat-meta">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span>
+                    <span>vs last semester</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-emerald">
+            <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Active Enrollments</span>
+                <h2 class="stat-number" id="statActiveStudents">{{ active_students }}</h2>
+                <div class="stat-meta">
+                    <span class="badge-subtle badge-emerald">
+                        {% if total_students > 0 %}
+                            {{ ((active_students / total_students) * 100) | round | int }}%
+                        {% else %}
+                            100%
+                        {% endif %}
+                        Retention Rate
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-blue">
+            <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Academic Programs</span>
+                <h2 class="stat-number" id="statTotalCourses">{{ total_courses }}</h2>
+                <div class="stat-meta">
+                    <span>Active degree streams</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-amber">
+            <div class="stat-icon-wrapper">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Average GPA</span>
+                <h2 class="stat-number" id="statAvgGpa">{{ avg_gpa }}</h2>
+                <div class="stat-meta">
+                    <span class="badge-subtle badge-amber"><i class="fa-solid fa-award"></i> Scale of 4.0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics & Quick Action Grid -->
+    <div class="dashboard-split-grid">
+
+        <!-- Course Distribution Breakdown -->
+        <div class="panel-card">
+            <div class="panel-header">
+                <div>
+                    <h3 class="panel-title"><i class="fa-solid fa-chart-column"></i> Program Enrollment Distribution</h3>
+                    <p class="panel-subtitle">Current student allocation across academic disciplines</p>
+                </div>
+                <a href="{{ url_for('students') }}" class="panel-link">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="distribution-list">
+                {% if course_stats %}
+                    {% for item in course_stats %}
+                        {% set pct = ((item.count / total_students) * 100) | round(1) if total_students > 0 else 0 %}
+                        <div class="distribution-item">
+                            <div class="distribution-label">
+                                <span class="course-name">{{ item.course }}</span>
+                                <span class="course-count"><strong>{{ item.count }}</strong> student{% if item.count != 1 %}s{% endif %} ({{ pct }}%)</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" data-width="{{ pct }}"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No student records available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Launch Actions & Platform Status -->
+        <div class="panel-card">
+            <div class="panel-header">
+                <div>
+                    <h3 class="panel-title"><i class="fa-solid fa-bolt"></i> Quick Operations</h3>
+                    <p class="panel-subtitle">Frequently accessed administrative tools</p>
+                </div>
+            </div>
+
+            <div class="quick-actions-grid">
+                <a href="{{ url_for('add_student') }}" class="quick-action-card">
+                    <div class="quick-action-icon bg-indigo"><i class="fa-solid fa-user-plus"></i></div>
+                    <div class="quick-action-text">
+                        <h4>Register Student</h4>
+                        <p>Enroll a new student with full dossier details</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right quick-action-arrow"></i>
+                </a>
+
+                <a href="{{ url_for('students') }}" class="quick-action-card">
+                    <div class="quick-action-icon bg-cyan"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <div class="quick-action-text">
+                        <h4>Search &amp; Filter Records</h4>
+                        <p>Instant lookup by ID, department, or status</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right quick-action-arrow"></i>
+                </a>
+
+                <a href="{{ url_for('about') }}" class="quick-action-card">
+                    <div class="quick-action-icon bg-emerald"><i class="fa-solid fa-circle-info"></i></div>
+                    <div class="quick-action-text">
+                        <h4>Platform Information</h4>
+                        <p>Architecture, FAQs, values &amp; development team</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right quick-action-arrow"></i>
+                </a>
+
+                <a href="/api/students" target="_blank" class="quick-action-card">
+                    <div class="quick-action-icon bg-amber"><i class="fa-solid fa-code"></i></div>
+                    <div class="quick-action-text">
+                        <h4>REST JSON Feed</h4>
+                        <p>Inspect real-time API data payload</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-up-right-from-square quick-action-arrow"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Students Table Section -->
+    <section class="panel-card mt-6">
+        <div class="panel-header flex-between">
+            <div>
+                <h3 class="panel-title"><i class="fa-solid fa-clock-rotate-left"></i> Recently Registered Students</h3>
+                <p class="panel-subtitle">Latest student profiles added to the registry</p>
+            </div>
+            <div class="panel-actions">
+                <a href="{{ url_for('students') }}" class="btn btn-outline btn-sm">
+                    <i class="fa-solid fa-table-list"></i> View All {{ total_students }} Students
+                </a>
+                <a href="{{ url_for('add_student') }}" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i> Add Student
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Program</th>
+                        <th>Semester</th>
+                        <th>GPA</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if recent_students %}
+                        {% for student in recent_students %}
+                            <tr>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="avatar-circle">
+                                            {{ student.name[:2].upper() }}
+                                        </div>
+                                        <div class="student-meta">
+                                            <a href="{{ url_for('student_details', student_id=student.id) }}" class="student-name">
+                                                {{ student.name }}
+                                            </a>
+                                            <span class="student-email">{{ student.email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="code-badge">{{ student.student_code }}</span>
+                                </td>
+                                <td>
+                                    <span class="course-pill">{{ student.course }}</span>
+                                </td>
+                                <td>
+                                    <span class="semester-tag">{{ student.semester }}</span>
+                                </td>
+                                <td>
+                                    <span class="gpa-pill {% if student.gpa >= 3.8 %}gpa-high{% elif student.gpa >= 3.5 %}gpa-mid{% else %}gpa-normal{% endif %}">
+                                        {{ "%.2f"|format(student.gpa) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-pill status-{{ student.status.lower().replace(' ', '-') }}">
+                                        <span class="status-dot-sm"></span> {{ student.status }}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <div class="table-actions">
+                                        <a href="{{ url_for('student_details', student_id=student.id) }}" class="btn-icon" title="View Profile">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn-icon" title="Edit Student">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center empty-state-cell">
+                                <div class="empty-state">
+                                    <i class="fa-solid fa-user-slash empty-icon"></i>
+                                    <h4>No student records found</h4>
+                                    <p>Get started by registering your first student record.</p>
+                                    <a href="{{ url_for('add_student') }}" class="btn btn-primary btn-sm">Add Student Now</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Platform Highlights Section -->
+    <section class="section-container mt-6">
+        <div class="section-header text-center">
+            <span class="section-tag">KEY PLATFORM PILLARS</span>
+            <h2 class="section-title">Designed for Modern Educational Standards</h2>
+            <p class="section-desc">Streamlining the student lifecycle from admission to graduation.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-indigo"><i class="fa-solid fa-bolt-lightning"></i></div>
+                <h3>Real-Time Synchronized Data</h3>
+                <p>Changes are saved immediately into our SQLite relational engine, ensuring administrators always have access to up-to-date data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-cyan"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3>Dual-Mode Live Search</h3>
+                <p>Filter students in real-time right in your browser or through backend query parameters without waiting for full page reloads.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-emerald"><i class="fa-solid fa-id-card"></i></div>
+                <h3>Complete Academic Dossier</h3>
+                <p>Detailed profiles include GPA trends, guardian emergency details, residential addresses, and counselor observations.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

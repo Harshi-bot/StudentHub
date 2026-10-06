@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="StudentHub - Modern, secure, and intelligent student information and records management platform.">
+    <title>{% block title %}StudentHub - Student Management System{% endblock %}</title>
+
+    <!-- Google Fonts: Inter and Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navigation Header -->
+    <header class="navbar" id="mainNavbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo" id="logoLink">
+                <span class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span class="logo-text">Student<span class="logo-accent">Hub</span></span>
+                <span class="version-tag">v2.4</span>
+            </a>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Nav Links -->
+            <nav class="nav-links" id="navLinks">
+                <a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}"
+                    id="navDashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('students') }}"
+                    class="nav-link {% if request.path.startswith('/students') and not request.path.endswith('/add') %}active{% endif %}"
+                    id="navStudents">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+                <a href="{{ url_for('about') }}" class="nav-link {% if request.path == '/about' %}active{% endif %}"
+                    id="navAbout">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About</span>
+                </a>
+                <div class="nav-cta">
+                    <a href="{{ url_for('add_student') }}" class="btn btn-primary btn-sm" id="navAddStudent">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Add Student</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Notifications -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container" id="flashContainer">
+        {% for category, message in messages %}
+        <div class="flash-alert flash-{{ category }}" role="alert">
+            <div class="flash-content">
+                <i
+                    class="fa-solid {% if category == 'success' %}fa-circle-check{% elif category == 'error' %}fa-circle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+            <button class="flash-close" onclick="this.parentElement.remove()"
+                aria-label="Close notification">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content Area -->
+    <main class="page-content" id="mainContent">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" id="siteFooter">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>Student<span class="logo-accent">Hub</span></span>
+                    </div>
+                    <p class="footer-desc">
+                        A modern, high-performance student information and academic management portal designed for
+                        universities, colleges, and educational academies.
+                    </p>
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">All Systems Operational</span>
+                    </div>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-chevron-right"></i> Dashboard</a>
+                        </li>
+                        <li><a href="{{ url_for('students') }}"><i class="fa-solid fa-chevron-right"></i> Student
+                                Directory</a></li>
+                        <li><a href="{{ url_for('add_student') }}"><i class="fa-solid fa-chevron-right"></i> Register
+                                Student</a></li>
+                        <li><a href="{{ url_for('about') }}"><i class="fa-solid fa-chevron-right"></i> About
+                                Platform</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Academic Programs</h4>
+                    <ul>
+                        <li><a href="{{ url_for('students') }}?course=BCA"><i class="fa-solid fa-chevron-right"></i>
+                                BCA</a></li>
+                        <li><a href="{{ url_for('students') }}?course=BSc+IT"><i class="fa-solid fa-chevron-right"></i>
+                                BSc IT</a></li>
+                        <li><a href="{{ url_for('students') }}?course=B.Tech+CS"><i
+                                    class="fa-solid fa-chevron-right"></i> B.Tech CS</a></li>
+                        <li><a href="{{ url_for('students') }}?course=Data+Science"><i
+                                    class="fa-solid fa-chevron-right"></i> Data Science</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Security & Platform</h4>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}#tech-stack"><i class="fa-solid fa-chevron-right"></i> Tech
+                                Architecture</a></li>
+                        <li><a href="{{ url_for('about') }}#faqs"><i class="fa-solid fa-chevron-right"></i> Frequently
+                                Asked Questions</a></li>
+                        <li><a href="{{ url_for('about') }}#security"><i class="fa-solid fa-chevron-right"></i> Privacy
+                                & Compliance</a></li>
+                        <li><a href="/api/stats" target="_blank"><i class="fa-solid fa-chevron-right"></i> JSON Stats
+                                API</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudentHub Academic Systems. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="{{ url_for('about') }}">Privacy Policy</a>
+                    <span>&bull;</span>
+                    <a href="{{ url_for('about') }}">Terms of Service</a>
+                    <span>&bull;</span>
+                    <a href="{{ url_for('about') }}">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

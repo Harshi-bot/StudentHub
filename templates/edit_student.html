@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Student - {{ student.name }} | StudentHub{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+
+    <!-- Breadcrumb & Header -->
+    <div class="page-header-wrapper">
+        <div class="page-title-block">
+            <div class="breadcrumb-trail">
+                <a href="{{ url_for('index') }}">Dashboard</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="{{ url_for('students') }}">Students</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="{{ url_for('student_details', student_id=student.id) }}">{{ student.name }}</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Edit</span>
+            </div>
+            <h1 class="page-title">Edit Student Record</h1>
+            <p class="page-subtitle">
+                Updating profile and academic standing for <strong>{{ student.name }}</strong> (<span class="code-badge">{{ student.student_code }}</span>)
+            </p>
+        </div>
+        <div class="page-actions-block">
+            <a href="{{ url_for('student_details', student_id=student.id) }}" class="btn btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> View Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Grid: Form on Left, Live ID Preview on Right -->
+    <div class="form-preview-grid">
+
+        <!-- Form Column -->
+        <div class="panel-card form-panel">
+            <form method="POST" action="{{ url_for('edit_student', student_id=student.id) }}" id="studentForm" class="student-entry-form">
+
+                <!-- Section: Personal Information -->
+                <div class="form-section">
+                    <div class="section-title-row">
+                        <span class="step-num">1</span>
+                        <div>
+                            <h3 class="form-section-title">Personal Information</h3>
+                            <p class="form-section-desc">Basic student identity and direct contact information</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="inputName" class="form-label required">Full Name</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-user"></i>
+                                <input 
+                                    type="text" 
+                                    id="inputName" 
+                                    name="name" 
+                                    class="form-control" 
+                                    value="{{ student.name }}" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmail" class="form-label required">Institutional Email</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                                <input 
+                                    type="email" 
+                                    id="inputEmail" 
+                                    name="email" 
+                                    class="form-control" 
+                                    value="{{ student.email }}" 
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2 mt-3">
+                        <div class="form-group">
+                            <label for="inputPhone" class="form-label">Phone Number</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-phone"></i>
+                                <input 
+                                    type="tel" 
+                                    id="inputPhone" 
+                                    name="phone" 
+                                    class="form-control" 
+                                    value="{{ student.phone or '' }}"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputDob" class="form-label">Date of Birth</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                <input 
+                                    type="date" 
+                                    id="inputDob" 
+                                    name="dob" 
+                                    class="form-control" 
+                                    value="{{ student.dob or '' }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Academic Details -->
+                <div class="form-section mt-5">
+                    <div class="section-title-row">
+                        <span class="step-num">2</span>
+                        <div>
+                            <h3 class="form-section-title">Academic Enrollment</h3>
+                            <p class="form-section-desc">Course allocation, semester level, and academic standing</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="inputCourse" class="form-label required">Academic Program / Degree</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <select id="inputCourse" name="course" class="form-control" required>
+                                    <option value="BCA" {% if student.course == 'BCA' %}selected{% endif %}>BCA (Bachelor of Computer Applications)</option>
+                                    <option value="BSc IT" {% if student.course == 'BSc IT' %}selected{% endif %}>BSc IT (Information Technology)</option>
+                                    <option value="B.Tech CS" {% if student.course == 'B.Tech CS' %}selected{% endif %}>B.Tech CS (Computer Science & Eng.)</option>
+                                    <option value="Data Science" {% if student.course == 'Data Science' %}selected{% endif %}>Data Science & AI</option>
+                                    <option value="Cybersecurity" {% if student.course == 'Cybersecurity' %}selected{% endif %}>Cybersecurity & Forensics</option>
+                                    <option value="MCA" {% if student.course == 'MCA' %}selected{% endif %}>MCA (Master of Computer Applications)</option>
+                                    <option value="Business Admin" {% if student.course == 'Business Admin' %}selected{% endif %}>Business Administration (BBA)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSemester" class="form-label required">Current Semester</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <select id="inputSemester" name="semester" class="form-control" required>
+                                    {% for i in range(1, 9) %}
+                                        <option value="Semester {{ i }}" {% if student.semester == 'Semester ' ~ i %}selected{% endif %}>Semester {{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3 mt-3">
+                        <div class="form-group">
+                            <label for="inputGpa" class="form-label">Current GPA</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-star"></i>
+                                <input 
+                                    type="number" 
+                                    step="0.01" 
+                                    min="0.00" 
+                                    max="4.00" 
+                                    id="inputGpa" 
+                                    name="gpa" 
+                                    class="form-control" 
+                                    value="{{ "%.2f"|format(student.gpa) }}"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputStatus" class="form-label">Enrollment Status</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-toggle-on"></i>
+                                <select id="inputStatus" name="status" class="form-control">
+                                    <option value="Active" {% if student.status == 'Active' %}selected{% endif %}>Active</option>
+                                    <option value="On Leave" {% if student.status == 'On Leave' %}selected{% endif %}>On Leave</option>
+                                    <option value="Graduated" {% if student.status == 'Graduated' %}selected{% endif %}>Graduated</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEnrollmentDate" class="form-label">Enrollment Date</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                <input 
+                                    type="date" 
+                                    id="inputEnrollmentDate" 
+                                    name="enrollment_date" 
+                                    class="form-control" 
+                                    value="{{ student.enrollment_date or '' }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Address & Guardian Information -->
+                <div class="form-section mt-5">
+                    <div class="section-title-row">
+                        <span class="step-num">3</span>
+                        <div>
+                            <h3 class="form-section-title">Emergency Contact &amp; Residence</h3>
+                            <p class="form-section-desc">Residential location and emergency escalation contacts</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputAddress" class="form-label">Residential Address</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <input 
+                                type="text" 
+                                id="inputAddress" 
+                                name="address" 
+                                class="form-control" 
+                                value="{{ student.address or '' }}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2 mt-3">
+                        <div class="form-group">
+                            <label for="inputGuardianName" class="form-label">Guardian / Parent Name</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-user-shield"></i>
+                                <input 
+                                    type="text" 
+                                    id="inputGuardianName" 
+                                    name="guardian_name" 
+                                    class="form-control" 
+                                    value="{{ student.guardian_name or '' }}"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputGuardianPhone" class="form-label">Guardian Emergency Phone</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-phone-volume"></i>
+                                <input 
+                                    type="tel" 
+                                    id="inputGuardianPhone" 
+                                    name="guardian_phone" 
+                                    class="form-control" 
+                                    value="{{ student.guardian_phone or '' }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="inputBio" class="form-label">Bio &amp; Academic Observations</label>
+                        <textarea 
+                            id="inputBio" 
+                            name="bio" 
+                            rows="3" 
+                            class="form-control"
+                        >{{ student.bio or '' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Form Submit Actions -->
+                <div class="form-actions mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg" id="btnSaveStudent">
+                        <i class="fa-solid fa-floppy-disk"></i> Update Student Record
+                    </button>
+                    <a href="{{ url_for('student_details', student_id=student.id) }}" class="btn btn-ghost btn-lg">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Live ID Card Preview Column -->
+        <div class="preview-panel">
+            <div class="preview-sticky">
+                <div class="preview-header">
+                    <h4><i class="fa-solid fa-id-badge"></i> Live Student ID Badge</h4>
+                    <span class="preview-live-tag"><span class="live-dot"></span> Live Sync</span>
+                </div>
+
+                <div class="id-card-preview" id="idCardPreview">
+                    <div class="id-card-top">
+                        <div class="id-card-brand">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>StudentHub Academy</span>
+                        </div>
+                        <span class="id-status-badge status-{{ student.status.lower().replace(' ', '-') }}" id="previewStatusBadge">
+                            {{ student.status }}
+                        </span>
+                    </div>
+
+                    <div class="id-card-body">
+                        <div class="id-card-avatar" id="previewAvatar">
+                            {{ student.name[:2].upper() }}
+                        </div>
+                        <div class="id-card-info">
+                            <h3 class="id-name" id="previewName">{{ student.name }}</h3>
+                            <span class="id-code" id="previewCode">{{ student.student_code }}</span>
+                            <div class="id-meta-item">
+                                <span class="id-meta-label">Program:</span>
+                                <span class="id-meta-val" id="previewCourse">{{ student.course }}</span>
+                            </div>
+                            <div class="id-meta-item">
+                                <span class="id-meta-label">Level:</span>
+                                <span class="id-meta-val" id="previewSemester">{{ student.semester }}</span>
+                            </div>
+                            <div class="id-meta-item">
+                                <span class="id-meta-label">Email:</span>
+                                <span class="id-meta-val" id="previewEmail">{{ student.email }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="id-card-footer">
+                        <div class="id-gpa-box">
+                            <span class="id-gpa-label">Cumulative GPA</span>
+                            <span class="id-gpa-val" id="previewGpa">{{ "%.2f"|format(student.gpa) }}</span>
+                        </div>
+                        <div class="id-barcode-mock">
+                            <div class="barcode-lines"></div>
+                            <span>OFFICIAL RECORD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-tips">
+                    <div class="tip-item">
+                        <i class="fa-solid fa-circle-info text-info"></i>
+                        <span>Student code: <strong>{{ student.student_code }}</strong> (Permanent Key)</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fa-solid fa-clock-rotate-left text-info"></i>
+                        <span>Enrolled on: {{ student.enrollment_date or 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

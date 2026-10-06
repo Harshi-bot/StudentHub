@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.name }} ({{ student.student_code }}) | StudentHub Profile{% endblock %}
+
+{% block content %}
+<div class="student-profile-page">
+
+    <!-- Breadcrumb & Top Bar -->
+    <div class="breadcrumb-trail mb-3">
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <a href="{{ url_for('students') }}">Students Directory</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>{{ student.name }}</span>
+    </div>
+
+    <!-- Student Profile Header Banner -->
+    <div class="profile-hero-card">
+        <div class="profile-hero-main">
+            <div class="profile-avatar-large">
+                {{ student.name[:2].upper() }}
+            </div>
+            <div class="profile-hero-details">
+                <div class="profile-title-row">
+                    <h1 class="profile-name">{{ student.name }}</h1>
+                    <span class="code-badge-lg">{{ student.student_code }}</span>
+                    <span class="status-pill status-{{ student.status.lower().replace(' ', '-') }}">
+                        <span class="status-dot-sm"></span> {{ student.status }}
+                    </span>
+                </div>
+                <p class="profile-course-line">
+                    <i class="fa-solid fa-graduation-cap"></i> <strong>{{ student.course }}</strong> &bull; {{ student.semester }} &bull; Class of 2026
+                </p>
+                <div class="profile-quick-contacts">
+                    <span><i class="fa-solid fa-envelope"></i> <a href="mailto:{{ student.email }}">{{ student.email }}</a></span>
+                    {% if student.phone %}
+                        <span><i class="fa-solid fa-phone"></i> {{ student.phone }}</span>
+                    {% endif %}
+                    {% if student.address %}
+                        <span><i class="fa-solid fa-location-dot"></i> {{ student.address }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-hero-actions">
+            <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn btn-primary" id="btnEditProfile">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Dossier
+            </a>
+            <button type="button" class="btn btn-outline" onclick="window.print()" id="btnPrintRecord">
+                <i class="fa-solid fa-print"></i> Print Record
+            </button>
+            <button 
+                type="button" 
+                class="btn btn-ghost text-danger btn-delete-trigger" 
+                data-student-id="{{ student.id }}"
+                data-student-name="{{ student.name }}"
+                data-student-code="{{ student.student_code }}"
+                data-delete-url="{{ url_for('delete_student', student_id=student.id) }}"
+                id="btnDeleteProfile">
+                <i class="fa-solid fa-trash-can"></i> Delete
+            </button>
+        </div>
+    </div>
+
+    <!-- Academic KPI Highlights Row -->
+    <div class="stats-grid mt-4">
+        <div class="stat-card stat-amber">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Cumulative GPA</span>
+                <h2 class="stat-number">{{ "%.2f"|format(student.gpa) }}</h2>
+                <div class="stat-meta">
+                    <span class="badge-subtle badge-amber">
+                        {% if student.gpa >= 3.8 %}
+                            Grade: A+ (Dean's List)
+                        {% elif student.gpa >= 3.5 %}
+                            Grade: A (Distinction)
+                        {% elif student.gpa >= 3.0 %}
+                            Grade: B+ (Good Standing)
+                        {% else %}
+                            Grade: B (Satisfactory)
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-emerald">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Term Attendance</span>
+                <h2 class="stat-number">94.8%</h2>
+                <div class="stat-meta">
+                    <span class="badge-subtle badge-emerald"><i class="fa-solid fa-circle-check"></i> Eligible for exams</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-blue">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Completed Credits</span>
+                <h2 class="stat-number">
+                    {% if 'Semester 6' in student.semester %}
+                        92 / 120
+                    {% elif 'Semester 4' in student.semester %}
+                        64 / 120
+                    {% elif 'Semester 2' in student.semester %}
+                        32 / 120
+                    {% else %}
+                        18 / 120
+                    {% endif %}
+                </h2>
+                <div class="stat-meta"><span>Accredited ECTS credits</span></div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-purple">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Admission Date</span>
+                <h2 class="stat-number-sm">{{ student.enrollment_date or 'August 2024' }}</h2>
+                <div class="stat-meta"><span>Verified Enrollment</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Details Multi-Column Grid -->
+    <div class="profile-grid mt-4">
+
+        <!-- Left / Main Column: Academic Dossier & Modules -->
+        <div class="profile-main-col">
+
+            <!-- Academic Overview Panel -->
+            <div class="panel-card mb-4">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title"><i class="fa-solid fa-book-bookmark"></i> Academic Enrollment Summary</h3>
+                        <p class="panel-subtitle">Official degree registration and department records</p>
+                    </div>
+                </div>
+
+                <div class="details-spec-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Department / Faculty</span>
+                        <span class="spec-value">Faculty of Computing &amp; Informatics</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Program of Study</span>
+                        <span class="spec-value">{{ student.course }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Academic Progression</span>
+                        <span class="spec-value">{{ student.semester }} (Undergraduate / Graduate)</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Enrollment Status</span>
+                        <span class="spec-value">
+                            <span class="status-pill status-{{ student.status.lower().replace(' ', '-') }}">
+                                {{ student.status }}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Enrolled Modules Table -->
+            <div class="panel-card mb-4">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title"><i class="fa-solid fa-list-check"></i> Current Semester Course Modules</h3>
+                        <p class="panel-subtitle">Subjects registered for {{ student.semester }}</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Subject Title</th>
+                                <th>Credits</th>
+                                <th>Grade Assessment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if 'BCA' in student.course or 'CS' in student.course or 'Data' in student.course %}
+                                <tr>
+                                    <td><strong>CS-401</strong></td>
+                                    <td>Advanced Database Systems &amp; SQL</td>
+                                    <td>4.0</td>
+                                    <td><span class="badge-subtle badge-emerald">A (92%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CS-402</strong></td>
+                                    <td>Cloud Architecture &amp; DevOps Pipelines</td>
+                                    <td>4.0</td>
+                                    <td><span class="badge-subtle badge-blue">A- (88%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CS-403</strong></td>
+                                    <td>Data Structures &amp; Algorithm Optimization</td>
+                                    <td>3.0</td>
+                                    <td><span class="badge-subtle badge-emerald">A+ (96%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CS-404</strong></td>
+                                    <td>Web Application Engineering (Flask &amp; JS)</td>
+                                    <td>4.0</td>
+                                    <td><span class="badge-subtle badge-emerald">A (94%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td><strong>IT-301</strong></td>
+                                    <td>Network Security &amp; Cryptography</td>
+                                    <td>4.0</td>
+                                    <td><span class="badge-subtle badge-emerald">A (91%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IT-302</strong></td>
+                                    <td>Enterprise Information Systems</td>
+                                    <td>3.0</td>
+                                    <td><span class="badge-subtle badge-blue">B+ (86%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IT-303</strong></td>
+                                    <td>Applied Statistics &amp; Analytics</td>
+                                    <td>3.0</td>
+                                    <td><span class="badge-subtle badge-emerald">A (90%)</span></td>
+                                    <td><span class="status-pill status-active">In Progress</span></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Counselor Notes & Observations -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title"><i class="fa-solid fa-notes-medical"></i> Biographical &amp; Academic Notes</h3>
+                        <p class="panel-subtitle">Official staff observations and achievements</p>
+                    </div>
+                </div>
+
+                <div class="bio-box">
+                    {% if student.bio %}
+                        <p class="bio-text">"{{ student.bio }}"</p>
+                    {% else %}
+                        <p class="text-muted">No special notes recorded. Click "Edit Dossier" to add counselor observations or extracurricular notes.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Personal & Emergency Contact Cards -->
+        <div class="profile-side-col">
+
+            <!-- Personal Contact Card -->
+            <div class="panel-card mb-4">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title"><i class="fa-solid fa-address-book"></i> Contact Details</h3>
+                    </div>
+                </div>
+
+                <div class="contact-card-list">
+                    <div class="contact-item">
+                        <div class="contact-icon bg-indigo"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Email Address</span>
+                            <a href="mailto:{{ student.email }}" class="contact-val">{{ student.email }}</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon bg-cyan"><i class="fa-solid fa-phone"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Direct Phone</span>
+                            <span class="contact-val">{{ student.phone or 'Not Provided' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon bg-emerald"><i class="fa-solid fa-cake-candles"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Date of Birth</span>
+                            <span class="contact-val">{{ student.dob or 'Not recorded' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon bg-amber"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Residential Address</span>
+                            <span class="contact-val">{{ student.address or 'Campus Residence Hall' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency / Guardian Contact Card -->
+            <div class="panel-card mb-4">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title"><i class="fa-solid fa-shield-heart"></i> Guardian / Emergency</h3>
+                    </div>
+                </div>
+
+                <div class="contact-card-list">
+                    <div class="contact-item">
+                        <div class="contact-icon bg-rose"><i class="fa-solid fa-user-shield"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Guardian / Parent</span>
+                            <span class="contact-val">{{ student.guardian_name or 'Not recorded' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon bg-rose"><i class="fa-solid fa-phone-volume"></i></div>
+                        <div class="contact-info">
+                            <span class="contact-label">Emergency Hotline</span>
+                            <span class="contact-val">{{ student.guardian_phone or 'Not recorded' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Actions -->
+            <div class="panel-card">
+                <h4 class="mb-3">Quick Navigation</h4>
+                <div class="quick-links-v">
+                    <a href="{{ url_for('students') }}" class="btn btn-outline btn-block mb-2">
+                        <i class="fa-solid fa-list"></i> Return to Directory
+                    </a>
+                    <a href="{{ url_for('add_student') }}" class="btn btn-ghost btn-block">
+                        <i class="fa-solid fa-user-plus"></i> Register Another Student
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Delete Confirmation Modal Dialog -->
+<div class="modal-backdrop" id="deleteModal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <div class="modal-danger-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div>
+                <h3 class="modal-title">Confirm Record Deletion</h3>
+                <p class="modal-subtitle">This action permanently deletes the student dossier from the database.</p>
+            </div>
+            <button type="button" class="modal-close-btn" id="modalCloseBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to remove <strong id="deleteStudentName">{{ student.name }}</strong> (<span id="deleteStudentCode" class="code-badge">{{ student.student_code }}</span>)?</p>
+            <p class="text-muted text-sm mt-2">All associated grades, address records, and emergency contact details will be removed immediately.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+            <form id="deleteStudentForm" method="POST" action="{{ url_for('delete_student', student_id=student.id) }}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa-solid fa-trash-can"></i> Permanently Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

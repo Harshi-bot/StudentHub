@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Directory | StudentHub{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+    <div class="page-header-wrapper">
+        <div class="page-title-block">
+            <div class="breadcrumb-trail">
+                <a href="{{ url_for('index') }}">Dashboard</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Students</span>
+            </div>
+            <h1 class="page-title">Student Directory</h1>
+            <p class="page-subtitle">Search and manage student records.</p>
+        </div>
+        <div class="page-actions-block">
+            <a href="{{ url_for('add_student') }}" class="btn btn-primary">
+                <i class="fa-solid fa-user-plus"></i> Add Student
+            </a>
+        </div>
+    </div>
+
+    <section class="filter-toolbar" aria-label="Filter students">
+        <form method="GET" action="{{ url_for('students') }}" class="filter-form">
+            <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="search"
+                    name="search"
+                    value="{{ search_query }}"
+                    placeholder="Search name, student ID, or email"
+                    aria-label="Search students">
+            </div>
+            <div class="filter-selects">
+                <div class="select-wrapper">
+                    <select name="course" aria-label="Filter by course">
+                        <option value="">All courses</option>
+                        {% for course in courses %}
+                        <option value="{{ course }}" {% if selected_course == course %}selected{% endif %}>{{ course }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="select-wrapper">
+                    <select name="status" aria-label="Filter by status">
+                        <option value="">All statuses</option>
+                        {% for status in statuses %}
+                        <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+                {% if search_query or selected_course or selected_status %}
+                <a href="{{ url_for('students') }}" class="btn btn-outline btn-sm">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+        <span class="count-badge"><strong>{{ total_count }}</strong> student{% if total_count != 1 %}s{% endif %}</span>
+    </section>
+
+    <section class="panel-card mt-4">
+        <div class="panel-header">
+            <div>
+                <h2 class="panel-title"><i class="fa-solid fa-users"></i> Students</h2>
+                <p class="panel-subtitle">Records matching your search and filters.</p>
+            </div>
+        </div>
+
+        {% if students %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Semester</th>
+                        <th>Status</th>
+                        <th>GPA</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <div class="student-meta">
+                                <a href="{{ url_for('student_details', student_id=student.id) }}" class="student-name">{{ student.name }}</a>
+                                <span class="student-email">{{ student.email }}</span>
+                                <span class="code-badge">{{ student.student_code }}</span>
+                            </div>
+                        </td>
+                        <td><span class="course-pill">{{ student.course }}</span></td>
+                        <td><span class="semester-tag">{{ student.semester }}</span></td>
+                        <td>
+                            <span class="status-pill status-{{ student.status.lower().replace(' ', '-') }}">
+                                <span class="status-dot-sm"></span>{{ student.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% set gpa_class = 'gpa-high' if student.gpa >= 3.8 else ('gpa-mid' if student.gpa >= 3.5 else 'gpa-normal') %}
+                            <span class="gpa-pill {{ gpa_class }}">{{ '%.2f'|format(student.gpa or 0) }}</span>
+                        </td>
+                        <td>
+                            <div class="table-actions">
+                                <a href="{{ url_for('student_details', student_id=student.id) }}" class="btn btn-outline btn-sm" aria-label="View {{ student.name }}">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                                <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn btn-outline btn-sm" aria-label="Edit {{ student.name }}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-solid fa-user-magnifying-glass"></i>
+            <h3>No students found</h3>
+            <p>Try changing your search or filters.</p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StudentHub</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">StudentHub</div>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/students">Students</a>
+            <a href="#">Add Student</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div>
+                <p class="tag">STUDENT MANAGEMENT SYSTEM</p>
+
+                <h1>Manage Students Easily.</h1>
+
+                <p>
+                    A simple and modern platform to manage
+                    student information in one place.
+                </p>
+
+                <button id="welcomeButton">
+                    Get Started
+                </button>
+            </div>
+        </section>
+
+        <section class="cards">
+
+            <div class="card">
+                <h2>120</h2>
+                <p>Total Students</p>
+            </div>
+
+            <div class="card">
+                <h2>85</h2>
+                <p>Active Students</p>
+            </div>
+
+            <div class="card">
+                <h2>6</h2>
+                <p>Total Courses</p>
+            </div>
+
+        </section>
+
+        <section class="students">
+
+            <h2>Recent Students</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Course</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>101</td>
+                        <td>Rahul Sharma</td>
+                        <td>BCA</td>
+                        <td>
+                            <button class="view-btn">View</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>102</td>
+                        <td>Ayesha Khan</td>
+                        <td>BSc IT</td>
+                        <td>
+                            <button class="view-btn">View</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>103</td>
+                        <td>Arjun Mehta</td>
+                        <td>BCA</td>
+                        <td>
+                            <button class="view-btn">View</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>StudentHub &copy; 2026</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>
+

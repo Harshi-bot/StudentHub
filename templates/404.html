@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found (404) | StudentHub{% endblock %}
+
+{% block content %}
+<div class="empty-state-page">
+    <div class="panel-card text-center" style="max-width: 600px; margin: 60px auto; padding: 50px 30px;">
+        <div style="font-size: 72px; color: var(--primary-600); margin-bottom: 10px; font-weight: 800; font-family: var(--font-heading);">404</div>
+        <h2 class="mb-3">Student or Page Not Found</h2>
+        <p class="text-muted mb-4">
+            The requested record or URL could not be located in the StudentHub database. It might have been moved, deleted, or the ID is incorrect.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fa-solid fa-chart-pie"></i> Return to Dashboard
+            </a>
+            <a href="{{ url_for('students') }}" class="btn btn-outline">
+                <i class="fa-solid fa-users"></i> Browse Students Directory
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
